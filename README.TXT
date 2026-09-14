@@ -1,5 +1,3 @@
-# ProyectoPOO
-
 Actividad N°1
 Un sistema de gestión para un refugio encaja perfectamente con el paradigma orientado a objetos (POO) porque permite trasladar las entidades y procesos del mundo real de manera directa y lógica al código.
 
