@@ -1,9 +1,9 @@
-ifndef ANIMAL_H
-#define ANIMAL_H
+
+#pragma once
 
 #include <string>
 
-    using namespace std;
+using namespace std;
 
 // 1. Clase Base: Contiene lo que tienen TODOS los animales
 class Animal {
@@ -17,12 +17,11 @@ protected:
 public:
   // Constructor por defecto y parametrizado
   Animal(int id, string nombre, int edad, string estadoSalud);
-  virtual ~Animal(); // Destructor virtual para polimorfismo
+  virtual ~Animal();
 
-  // Método virtual puro para obligar a Perro y Gato a mostrar su info
   virtual void mostrarInfo() const = 0;
 
-  // Getters y Setters
+  // Getters y Setters //
   int getId() const;
   string getNombre() const;
   int getEdad() const;
@@ -31,11 +30,11 @@ public:
   void setDisponible(bool estado);
 };
 
-// 2. Clase Derivada: PERRO (Hereda de Animal)
+// 2. Clase Derivada: PERRO (Hereda de Animal) //
 class Perro : public Animal {
 private:
-  string raza;   // Agrega raza
-  string tamano; // Agrega tamaño ("Grande", "Mediano", "Pequeño")
+  string raza;
+  string tamano;
 
 public:
   Perro(int id, string nombre, int edad, string estadoSalud, string raza,
@@ -51,16 +50,11 @@ public:
 class Gato : public Animal {
 private:
   string colorPelaje; // Agrega color de pelaje
-  bool esDeInterior;  // Agrega condición (true: Interior / false: Exterior)
 
 public:
-  Gato(int id, string nombre, int edad, string estadoSalud, string colorPelaje,
-       bool esDeInterior);
+  Gato(int id, string nombre, int edad, string estadoSalud, string colorPelaje);
 
   // Métodos propios de Gato
   string getColorPelaje() const;
-  bool getEsDeInterior() const;
   void mostrarInfo() const override;
 };
-
-#endif
