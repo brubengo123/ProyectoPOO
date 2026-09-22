@@ -54,27 +54,26 @@ void Perro::mostrarInfo() const {
 // IMPLEMENTACIÓN DE LA CLASE DERIVADA: Gato
 // ==========================================
 
-// Constructor de Gato (Llama al constructor de la clase base Animal)
-Gato::Gato(int id, string nombre, int edad, string estadoSalud,
-           string colorPelaje, bool esDeInterior)
+// Constructor de Gato (Llama al constructor de la clase base Animal) //
+Gato ::  Gato(int id, string nombre, int edad, string estadoSalud,
+      string colorPelaje, bool esDeInterior)
     : Animal(id, nombre, edad, estadoSalud), colorPelaje(colorPelaje),
       esDeInterior(esDeInterior) {}
 
-// Getters de Gato
 string Gato::getColorPelaje() const { return colorPelaje; }
 bool Gato::getEsDeInterior() const { return esDeInterior; }
 
-// Muestra toda la información del Gato
+
+// Muestra toda la información del Gato //
 void Gato::mostrarInfo() const {
   cout << "--- [GATO] ---" << endl;
   cout << "ID: " << id << endl;
   cout << "Nombre: " << nombre << endl;
-  cout << "Edad: " << edad << " años" << endl;
+    cout << "Edad: " << edad << " años" << endl;
   cout << "Salud: " << estadoSalud << endl;
   cout << "Pelaje: " << colorPelaje << endl;
-  cout << "Condición: "
-       << (esDeInterior ? "Gato de Interior" : "Gato de Exterior") << endl;
-  cout << "Estado de Adopción: " << (disponible ? "Disponible" : "Adoptado")
-       << endl;
+    cout << "Vive en interior: " << (esDeInterior ? "Si" : "No") << endl;
+    cout << "Estado de Adopción: " << (disponible ? "Disponible" : "Adoptado")
+      << endl;
   cout << "----------------" << endl;
 }

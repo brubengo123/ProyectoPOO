@@ -1,82 +1,65 @@
 #include "Refugio.h"
 #include <iostream>
 
-// Constructor por defecto
-Refugio::Refugio() : nombre("Sin Nombre"), direccion("Sin Dirección") {}
+using namespace std;
 
-// Constructor parametrizado
-Refugio::Refugio(std::string nombre, std::string direccion)
-    : nombre(nombre), direccion(direccion) {}
+static int contadorIdAnimal = 100;
+
+Refugio::Refugio() = default;
 
 // Destructor: Libera la memoria de las mascotas si fueron creadas dinámicamente
 Refugio::~Refugio() {
-  for (Mascota *m : inventarioMascotas) {
+  for (Animal *m : animales) {
     delete m;
   }
-  inventarioMascotas.clear();
+  animales.clear();
 }
 
-// Getters y Setters
-std::string Refugio::getNombre() const { return nombre; }
-
-void Refugio::setNombre(const std::string &nuevoNombre) {
-  nombre = nuevoNombre;
+void Refugio::registrarPerro(string nombre, int edad, string salud,
+                             string raza, string tamano) {
+  int nuevoId = ++contadorIdAnimal;
+  animales.push_back(new Perro(nuevoId, nombre, edad, salud, raza, tamano));
+  cout << "Perro registrado exitosamente con ID: " << nuevoId << endl;
 }
 
-std::string Refugio::getDireccion() const { return direccion; }
-
-void Refugio::setDireccion(const std::string &nuevaDireccion) {
-  direccion = nuevaDireccion;
+void Refugio::registrarGato(string nombre, int edad, string salud,
+                            string colorPelaje, bool esDeInterior) {
+  int nuevoId = ++contadorIdAnimal;
+  animales.push_back(
+      new Gato(nuevoId, nombre, edad, salud, colorPelaje, esDeInterior));
+  cout << "Gato registrado exitosamente con ID: " << nuevoId << endl;
 }
 
-// Agregar mascota al inventario
-void Refugio::agregarMascota(Mascota *mascota) {
-  if (mascota != nullptr) {
-    inventarioMascotas.push_back(mascota);
-    std::cout << "Mascota agregada con exito al refugio " << nombre << ".\n";
+void Refugio::listarAnimales() const {
+  if (animales.empty()) {
+    cout << "No hay animales registrados en el refugio." << endl;
+    return;
+  }
+  for (const Animal *animal : animales) {
+    animal->mostrarInfo();
   }
 }
 
-// Eliminar mascota por ID
-bool Refugio::eliminarMascota(int idMascota) {
-  for (auto it = inventarioMascotas.begin(); it != inventarioMascotas.end();
-       ++it) {
-    if ((*it)->getId() ==
-        idMascota) { // Asume que Mascota tiene un método getId()
-      delete *it;    // Liberar memoria
-      inventarioMascotas.erase(it);
-      std::cout << "Mascota con ID " << idMascota << " removida del refugio.\n";
-      return true;
+void Refugio::listarAnimalesDisponibles() const {
+  bool hayDisponibles = false;
+
+  for (const Animal *animal : animales) {
+    if (animal->isDisponible()) {
+      animal->mostrarInfo();
+      hayDisponibles = true;
     }
   }
-  std::cout << "No se encontro la mascota con ID " << idMascota << ".\n";
-  return false;
+
+  if (!hayDisponibles) {
+    cout << "No hay animales disponibles en este momento." << endl;
+  }
 }
 
-// Buscar mascota por ID
-Mascota *Refugio::buscarMascota(int idMascota) const {
-  for (Mascota *m : inventarioMascotas) {
-    if (m->getId() == idMascota) {
-      return m;
+Animal *Refugio::buscarAnimalPorId(int id) const {
+  for (Animal *animal : animales) {
+    if (animal->getId() == id) {
+      return animal;
     }
   }
   return nullptr;
-}
-
-// Mostrar lista de mascotas
-void Refugio::mostrarMascotas() const {
-  std::cout << "\n=== Mascotas en el Refugio: " << nombre << " ===\n";
-  if (inventarioMascotas.empty()) {
-    std::cout << "Actualmente no hay mascotas en el refugio.\n";
-    return;
-  }
-  for (const Mascota *m : inventarioMascotas) {
-    m->mostrarInformacion(); // Asume que Mascota tiene mostrarInformacion()
-    std::cout << "-----------------------------------\n";
-  }
-}
-
-// Obtener cantidad total de mascotas
-int Refugio::getCantidadMascotas() const {
-  return static_cast<int>(inventarioMascotas.size());
 }

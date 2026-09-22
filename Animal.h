@@ -50,11 +50,14 @@ public:
 class Gato : public Animal {
 private:
   string colorPelaje; // Agrega color de pelaje
+  bool esDeInterior;
 
 public:
-  Gato(int id, string nombre, int edad, string estadoSalud, string colorPelaje);
+  Gato(int id, string nombre, int edad, string estadoSalud, string colorPelaje,
+       bool esDeInterior);
 
   // Métodos propios de Gato
   string getColorPelaje() const;
+  bool getEsDeInterior() const;
   void mostrarInfo() const override;
 };
