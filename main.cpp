@@ -1,9 +1,32 @@
 #include "Refugio.h"
+#include "Coleccion.h"
+#include "Excepciones.h"
 #include <iostream>
 #include <limits>
 #include <string>
 
 using namespace std;
+
+template <typename T>
+void mostrarCantidad(const Coleccion<T> &coleccion, const string &tipo) {
+	cout << "Coleccion de " << tipo << ": " << cantidadDe(coleccion)
+		 << " elemento(s).\n";
+}
+
+void demostrarColecciones() {
+	Coleccion<int> edades;
+	Coleccion<string> nombres;
+	edades.agregar(3);
+	edades.agregar(5);
+	nombres.agregar("Max");
+	nombres.agregar("Luna");
+	mostrarCantidad(edades, "enteros");
+	mostrarCantidad(nombres, "textos");
+	cout << "Instancias de Coleccion<int>: "
+		 << Coleccion<int>::cantidadInstancias() << "\n";
+	cout << "Instancias de Coleccion<string>: "
+		 << Coleccion<string>::cantidadInstancias() << "\n";
+}
 
 void limpiarEntrada() {
 	if (cin.fail()) {
@@ -20,6 +43,9 @@ int leerEntero(const string &mensaje) {
 			limpiarEntrada();
 			return valor;
 		}
+		if (cin.eof()) {
+			return 0;
+		}
 		cout << "Entrada invalida. Debe ingresar un numero.\n";
 		limpiarEntrada();
 	}
@@ -34,6 +60,9 @@ string leerTexto(const string &mensaje) {
 		}
 		if (getline(cin, valor) && !valor.empty()) {
 			return valor;
+		}
+		if (cin.eof()) {
+			return "";
 		}
 		cout << "Entrada invalida. Debe ingresar texto.\n";
 		limpiarEntrada();
@@ -54,6 +83,9 @@ bool leerSiNo(const string &mensaje) {
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				return false;
 			}
+		}
+		if (cin.eof()) {
+			return false;
 		}
 		cout << "Respuesta invalida. Use s o n.\n";
 		limpiarEntrada();
@@ -93,7 +125,7 @@ void registrarGato(Refugio &refugio) {
 
 void buscarAnimal(const Refugio &refugio) {
 	int id = leerEntero("ID del animal: ");
-	Animal *animal = refugio.buscarAnimalPorId(id);
+	Animal *animal = refugio(id);
 	if (animal == nullptr) {
 		cout << "No se encontro un animal con ese ID.\n";
 		return;
@@ -101,19 +133,53 @@ void buscarAnimal(const Refugio &refugio) {
 	animal->mostrarInfo();
 }
 
-void registrarAdopcion(Refugio &refugio) {
-	int id = leerEntero("ID del animal a adoptar: ");
-	Animal *animal = refugio.buscarAnimalPorId(id);
-	if (animal == nullptr) {
-		cout << "No se encontro un animal con ese ID.\n";
+void registrarAdoptante(Refugio &refugio) {
+	string nombre = leerTexto("Nombre: ");
+	string telefono = leerTexto("Telefono: ");
+	string correo = leerTexto("Correo: ");
+	refugio.registrarAdoptante(nombre, telefono, correo);
+}
+
+void gestionarSolicitud(Refugio &refugio) {
+	cout << "1. Crear solicitud\n"
+		 << "2. Confirmar solicitud\n"
+		 << "3. Cancelar solicitud\n";
+	int accion = leerEntero("Seleccione una accion: ");
+
+	if (accion == 1) {
+		int idAdoptante = leerEntero("ID del adoptante: ");
+		int idAnimal = leerEntero("ID del animal: ");
+		int idSolicitud = refugio.crearSolicitud(idAdoptante, idAnimal);
+		if (idSolicitud == 0) {
+			cout << "No se pudo crear la solicitud. Verifique los IDs y la disponibilidad.\n";
+		} else {
+			cout << "Solicitud creada con ID: " << idSolicitud << "\n";
+		}
 		return;
 	}
-	if (!animal->isDisponible()) {
-		cout << "El animal ya fue adoptado.\n";
+
+	int idSolicitud = leerEntero("ID de la solicitud: ");
+	bool resultado = false;
+	if (accion == 2) {
+		resultado = refugio.confirmarSolicitud(idSolicitud);
+	} else if (accion == 3) {
+		resultado = refugio.cancelarSolicitud(idSolicitud);
+	} else {
+		cout << "Accion invalida.\n";
 		return;
 	}
-	animal->setDisponible(false);
-	cout << "Adopcion registrada correctamente.\n";
+
+	cout << (resultado ? "Operacion realizada correctamente.\n"
+	                   : "No se pudo realizar la operacion.\n");
+}
+
+void devolverAnimal(Refugio &refugio) {
+	int idAnimal = leerEntero("ID del animal a devolver: ");
+	if (refugio.devolverAnimal(idAnimal)) {
+		cout << "El animal ahora esta disponible nuevamente.\n";
+	} else {
+		cout << "No se pudo devolver el animal. Verifique el ID y su estado.\n";
+	}
 }
 
 int main() {
@@ -125,6 +191,7 @@ int main() {
 		opcion = leerEntero("Seleccione una opcion: ");
 		cout << '\n';
 
+		try {
 		switch (opcion) {
 		case 1:
 			registrarPerro(refugio);
@@ -142,25 +209,38 @@ int main() {
 			break;
 		}
 		case 4:
-			cout << "Funcion para registrar adoptante en desarrollo.\n";
+			registrarAdoptante(refugio);
 			break;
 		case 5:
 			buscarAnimal(refugio);
 			break;
 		case 6:
-			cout << "Funcion para crear, confirmar o cancelar solicitud de adopcion en desarrollo.\n";
+			gestionarSolicitud(refugio);
 			break;
 		case 7:
-			cout << "Funcion para devolver un animal al estado disponible en desarrollo.\n";
+			devolverAnimal(refugio);
 			break;
 		case 8:
-			cout << "Funcion para mostrar solicitudes e historial de adopciones en desarrollo.\n";
+			demostrarColecciones();
+			refugio.listarAdoptantes();
+			refugio.listarSolicitudes();
 			break;
 		case 0:
 			cout << "Saliendo del sistema...\n";
 			break;
 		default:
 			cout << "Opcion invalida.\n";
+		}
+		} catch (const IdDuplicadoException &ex) {
+			cout << "Error de ID: " << ex.what() << "\n";
+		} catch (const AnimalNoDisponibleException &ex) {
+			cout << "Error de disponibilidad: " << ex.what() << "\n";
+		} catch (const IndiceInvalidoException &ex) {
+			cout << "Error de indice: " << ex.what() << "\n";
+		} catch (const out_of_range &ex) {
+			cout << "Error de rango: " << ex.what() << "\n";
+		} catch (const exception &ex) {
+			cout << "Error: " << ex.what() << "\n";
 		}
 	} while (opcion != 0);
 
