@@ -1,7 +1,7 @@
 # ProyectoPOO
 
 Actividad N°1
-Un sistema de gestión para un refugio encaja perfectamente con el paradigma orientado a objetos (POO) porque permite trasladar las entidades y procesos del mundo real de manera directa y lógica al código.
+Un sistema de gestión para un refugio anda perfectamente con el paradigma orientado a objetos (POO) porque permite trasladar las entidades y procesos del mundo real de manera directa y lógica al código.
 
 Modelado natural (Abstracción): Los elementos físicos y lógicos del entorno (perros, gatos, adoptantes, el propio refugio) se identifican claramente como "objetos" independientes que interactúan entre sí.
 
