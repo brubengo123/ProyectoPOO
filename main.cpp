@@ -225,7 +225,6 @@ int main() {
 			devolverAnimal(refugio);
 			break;
 		case 8:
-			demostrarColecciones();
 			refugio.listarAdoptantes();
 			refugio.listarSolicitudes();
 			break;
