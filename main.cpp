@@ -7,6 +7,8 @@
 
 using namespace std;
 
+class FinDeEntrada {};
+
 template <typename T>
 void mostrarCantidad(const Coleccion<T> &coleccion, const string &tipo) {
 	cout << "Coleccion de " << tipo << ": " << cantidadDe(coleccion)
@@ -44,7 +46,7 @@ int leerEntero(const string &mensaje) {
 			return valor;
 		}
 		if (cin.eof()) {
-			return 0;
+			throw FinDeEntrada();
 		}
 		cout << "Entrada invalida. Debe ingresar un numero.\n";
 		limpiarEntrada();
@@ -55,14 +57,11 @@ string leerTexto(const string &mensaje) {
 	string valor;
 	while (true) {
 		cout << mensaje;
-		if (cin.peek() == '\n') {
-			cin.ignore();
-		}
 		if (getline(cin, valor) && !valor.empty()) {
 			return valor;
 		}
 		if (cin.eof()) {
-			return "";
+			throw FinDeEntrada();
 		}
 		cout << "Entrada invalida. Debe ingresar texto.\n";
 		limpiarEntrada();
@@ -85,7 +84,7 @@ bool leerSiNo(const string &mensaje) {
 			}
 		}
 		if (cin.eof()) {
-			return false;
+			throw FinDeEntrada();
 		}
 		cout << "Respuesta invalida. Use s o n.\n";
 		limpiarEntrada();
@@ -125,7 +124,7 @@ void registrarGato(Refugio &refugio) {
 
 void buscarAnimal(const Refugio &refugio) {
 	int id = leerEntero("ID del animal: ");
-	Animal *animal = refugio(id);
+	const Animal *animal = refugio(id);
 	if (animal == nullptr) {
 		cout << "No se encontro un animal con ese ID.\n";
 		return;
@@ -188,7 +187,12 @@ int main() {
 
 	do {
 		mostrarMenu();
-		opcion = leerEntero("Seleccione una opcion: ");
+		try {
+			opcion = leerEntero("Seleccione una opcion: ");
+		} catch (const FinDeEntrada &) {
+			cout << "\nFin de la entrada. Saliendo del sistema...\n";
+			break;
+		}
 		cout << '\n';
 
 		try {
@@ -231,6 +235,9 @@ int main() {
 		default:
 			cout << "Opcion invalida.\n";
 		}
+		} catch (const FinDeEntrada &) {
+			cout << "\nFin de la entrada. Saliendo del sistema...\n";
+			break;
 		} catch (const IdDuplicadoException &ex) {
 			cout << "Error de ID: " << ex.what() << "\n";
 		} catch (const AnimalNoDisponibleException &ex) {
