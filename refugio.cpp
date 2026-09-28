@@ -59,8 +59,10 @@ SolicitudAdopcion::SolicitudAdopcion(const SolicitudAdopcion &otra)
       estado(otra.estado) {}
 
 int SolicitudAdopcion::getId() const { return id; }
-Adoptante *SolicitudAdopcion::getAdoptante() const { return adoptante; }
-Animal *SolicitudAdopcion::getAnimal() const { return animal; }
+Adoptante *SolicitudAdopcion::getAdoptante() { return adoptante; }
+const Adoptante *SolicitudAdopcion::getAdoptante() const { return adoptante; }
+Animal *SolicitudAdopcion::getAnimal() { return animal; }
+const Animal *SolicitudAdopcion::getAnimal() const { return animal; }
 EstadoSolicitud SolicitudAdopcion::getEstado() const { return estado; }
 void SolicitudAdopcion::setEstado(EstadoSolicitud nuevoEstado) {
   estado = nuevoEstado;
@@ -195,7 +197,17 @@ void Refugio::listarAnimalesDisponibles() const {
   }
 }
 
-Animal *Refugio::buscarAnimalPorId(int id) const {
+Animal *Refugio::buscarAnimalPorId(int id) {
+  for (Animal *const *it = animales.data();
+       it != animales.data() + animales.size(); ++it) {
+    if ((*it)->getId() == id) {
+      return *it;
+    }
+  }
+  return nullptr;
+}
+
+const Animal *Refugio::buscarAnimalPorId(int id) const {
   for (Animal *const *it = animales.data();
        it != animales.data() + animales.size(); ++it) {
     if ((*it)->getId() == id) {
@@ -219,7 +231,11 @@ const Animal *Refugio::operator[](size_t posicion) const {
   return animales[posicion];
 }
 
-Animal *Refugio::operator()(int id) const { return buscarAnimalPorId(id); }
+Animal *Refugio::operator()(int id) { return buscarAnimalPorId(id); }
+
+const Animal *Refugio::operator()(int id) const {
+  return buscarAnimalPorId(id);
+}
 
 int Refugio::registrarAdoptante(string nombre, string telefono, string correo) {
   int nuevoId = ++contadorIdAdoptante;
@@ -239,7 +255,17 @@ void Refugio::listarAdoptantes() const {
   }
 }
 
-Adoptante *Refugio::buscarAdoptantePorId(int id) const {
+Adoptante *Refugio::buscarAdoptantePorId(int id) {
+  for (Adoptante *const *it = adoptantes.data();
+       it != adoptantes.data() + adoptantes.size(); ++it) {
+    if ((*it)->getId() == id) {
+      return *it;
+    }
+  }
+  return nullptr;
+}
+
+const Adoptante *Refugio::buscarAdoptantePorId(int id) const {
   for (Adoptante *const *it = adoptantes.data();
        it != adoptantes.data() + adoptantes.size(); ++it) {
     if ((*it)->getId() == id) {

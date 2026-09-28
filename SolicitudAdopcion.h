@@ -18,8 +18,11 @@ public:
   SolicitudAdopcion(const SolicitudAdopcion &otra);
 
   int getId() const;
-  Adoptante *getAdoptante() const;
-  Animal *getAnimal() const;
+  // Estos punteros son referencias prestadas; no transfieren propiedad.
+  Adoptante *getAdoptante();
+  const Adoptante *getAdoptante() const;
+  Animal *getAnimal();
+  const Animal *getAnimal() const;
   EstadoSolicitud getEstado() const;
   void setEstado(EstadoSolicitud nuevoEstado);
   void reasignar(Adoptante *nuevoAdoptante, Animal *nuevoAnimal);

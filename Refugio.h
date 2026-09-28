@@ -23,16 +23,20 @@ public:
                      std::string colorPelaje, bool esDeInterior);
   void listarAnimales() const;
   void listarAnimalesDisponibles() const;
-  Animal *buscarAnimalPorId(int id) const;
+  // Los punteros devueltos son prestados; Refugio conserva su propiedad.
+  Animal *buscarAnimalPorId(int id);
+  const Animal *buscarAnimalPorId(int id) const;
   Animal *operator[](size_t posicion);
   const Animal *operator[](size_t posicion) const;
-  Animal *operator()(int id) const;
+  Animal *operator()(int id);
+  const Animal *operator()(int id) const;
 
   // Gestion de Adoptantes
   int registrarAdoptante(std::string nombre, std::string telefono,
                          std::string correo);
   void listarAdoptantes() const;
-  Adoptante *buscarAdoptantePorId(int id) const;
+  Adoptante *buscarAdoptantePorId(int id);
+  const Adoptante *buscarAdoptantePorId(int id) const;
 
   // Gestion de SolicitudesAdopcion
   int crearSolicitud(int idAdoptante, int idAnimal);
