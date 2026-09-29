@@ -44,4 +44,4 @@ public:
 template <typename T>
 std::size_t cantidadDe(const Coleccion<T> &coleccion) {
   return coleccion.cantidad();
-}
+};
