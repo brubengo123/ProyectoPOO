@@ -1,11 +1,36 @@
-Integrantes del grupo: Susino Vogler Bruno y Menardi Lucas
-Instrucciones para ejecutar el programa
-Paso Nº1: Descargar el Archivo .ZIP y darle click derecho y extraerlo
-Paso Nº2: Abrir la carpeta que creo al extraer el archivo .ZIP
-Paso Nº3: Ejecutar el archivo llamado "Sistemaderefugio.exe"
+# Instrucciones para correr el programa
 
-O otra opcion es
-Paso Nº1: Abrir la carpeta extraida en Visual Studio Code
-Paso Nº2: Seleccionar el archivo el cual se llama "Sistemaderefugio.exe"
-Paso Nº3: Abrir una terminal
-Paso Nº4: Ejecutar en la terminal el siguiente comando " ./Sistemaderefugio.exe "
+## Integrantes del grupo
+- Susino Vogler Bruno
+- Menardi Lucas
+
+---
+
+## Método 1: Ejecutar el archivo compilado
+
+Paso Nº1: Descargar el archivo .ZIP y hacer click derecho sobre él.
+
+Paso Nº2: Extraer el contenido en una carpeta nueva.
+
+Paso Nº3: Abrir la carpeta extraída.
+
+Paso Nº4: Ejecutar el archivo llamado "Sistemaderefugio.exe".
+
+---
+
+## Método 2: Ejecutar desde Visual Studio Code
+
+Paso Nº1: Abrir la carpeta extraída en Visual Studio Code.
+
+Paso Nº2: Buscar el archivo llamado "Sistemaderefugio.exe".
+
+Paso Nº3: Abrir una terminal dentro del proyecto.
+
+Paso Nº4: Ejecutar el siguiente comando:
+
+./Sistemaderefugio.exe
+
+---
+
+## Nota
+Si el archivo ejecutable no aparece, puede ser necesario compilar el proyecto desde el entorno de desarrollo antes de correrlo.
