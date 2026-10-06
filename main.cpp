@@ -101,6 +101,7 @@ void mostrarMenu() {
 		 << "6. Crear, confirmar o cancelar solicitud de adopcion\n"
 		 << "7. Devolver un animal al estado disponible\n"
 		 << "8. Mostrar solicitudes e historial de adopciones\n"
+		 << "9. Buscar animal por indice (comienza en 0)\n"
 		 << "0. Salir\n";
 }
 
@@ -132,11 +133,20 @@ void buscarAnimal(const Refugio &refugio) {
 	animal->mostrarInfo();
 }
 
+void buscarAnimalPorIndice(const Refugio &refugio) {
+	int indice = leerEntero("Indice del animal (comienza en 0): ");
+	if (indice < 0) {
+		throw IndiceInvalidoException(indice);
+	}
+	refugio[static_cast<size_t>(indice)]->mostrarInfo();
+}
+
 void registrarAdoptante(Refugio &refugio) {
 	string nombre = leerTexto("Nombre: ");
 	string telefono = leerTexto("Telefono: ");
 	string correo = leerTexto("Correo: ");
-	refugio.registrarAdoptante(nombre, telefono, correo);
+	string tipoVivienda = leerTexto("Tipo de vivienda: ");
+	refugio.registrarAdoptante(nombre, telefono, correo, tipoVivienda);
 }
 
 void gestionarSolicitud(Refugio &refugio) {
@@ -227,6 +237,9 @@ int main() {
 		case 8:
 			refugio.listarAdoptantes();
 			refugio.listarSolicitudes();
+			break;
+		case 9:
+			buscarAnimalPorIndice(refugio);
 			break;
 		case 0:
 			cout << "Saliendo del sistema...\n";

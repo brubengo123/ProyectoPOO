@@ -11,6 +11,8 @@ public:
 
 class IndiceInvalidoException : public std::out_of_range {
 public:
+  explicit IndiceInvalidoException(int indice)
+      : std::out_of_range("Indice invalido: " + std::to_string(indice)) {}
   explicit IndiceInvalidoException(std::size_t indice)
       : std::out_of_range("Indice invalido: " + std::to_string(indice)) {}
 };

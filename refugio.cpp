@@ -23,19 +23,22 @@ const char *textoEstado(EstadoSolicitud estado) {
 }
 }
 
-Adoptante::Adoptante() : Adoptante(0, "", "", "") {}
+Adoptante::Adoptante() : Adoptante(0, "", "", "", "") {}
 
-Adoptante::Adoptante(int id, string nombre, string telefono, string correo)
-    : id(id), nombre(nombre), telefono(telefono), correo(correo) {}
+Adoptante::Adoptante(int id, string nombre, string telefono, string correo,
+                     string tipoVivienda)
+    : id(id), nombre(nombre), telefono(telefono), correo(correo),
+      tipoVivienda(tipoVivienda) {}
 
 Adoptante::Adoptante(const Adoptante &otro)
     : id(otro.id), nombre(otro.nombre), telefono(otro.telefono),
-      correo(otro.correo) {}
+      correo(otro.correo), tipoVivienda(otro.tipoVivienda) {}
 
 int Adoptante::getId() const { return id; }
 string Adoptante::getNombre() const { return nombre; }
 string Adoptante::getTelefono() const { return telefono; }
 string Adoptante::getCorreo() const { return correo; }
+string Adoptante::getTipoVivienda() const { return tipoVivienda; }
 
 void Adoptante::mostrarInfo() const {
   cout << "--- ADOPTANTE ---\n"
@@ -43,6 +46,7 @@ void Adoptante::mostrarInfo() const {
        << "Nombre: " << nombre << "\n"
        << "Telefono: " << telefono << "\n"
        << "Correo: " << correo << "\n"
+       << "Tipo de vivienda: " << tipoVivienda << "\n"
        << "-----------------\n";
 }
 
@@ -237,9 +241,14 @@ const Animal *Refugio::operator()(int id) const {
   return buscarAnimalPorId(id);
 }
 
-int Refugio::registrarAdoptante(string nombre, string telefono, string correo) {
+int Refugio::registrarAdoptante(string nombre, string telefono, string correo,
+                                string tipoVivienda) {
   int nuevoId = ++contadorIdAdoptante;
-  adoptantes.push_back(new Adoptante(nuevoId, nombre, telefono, correo));
+  if (buscarAdoptantePorId(nuevoId) != nullptr) {
+    throw IdDuplicadoException(nuevoId);
+  }
+  adoptantes.push_back(
+      new Adoptante(nuevoId, nombre, telefono, correo, tipoVivienda));
   cout << "Adoptante registrado exitosamente con ID: " << nuevoId << endl;
   return nuevoId;
 }
@@ -285,6 +294,11 @@ int Refugio::crearSolicitud(int idAdoptante, int idAnimal) {
     throw AnimalNoDisponibleException(idAnimal);
   }
   int nuevoId = ++contadorIdSolicitud;
+  for (const SolicitudAdopcion *solicitud : solicitudes) {
+    if (solicitud->getId() == nuevoId) {
+      throw IdDuplicadoException(nuevoId);
+    }
+  }
   solicitudes.push_back(new SolicitudAdopcion(nuevoId, adoptante, animal));
   return nuevoId;
 }

@@ -33,7 +33,7 @@ public:
 
   // Gestion de Adoptantes
   int registrarAdoptante(std::string nombre, std::string telefono,
-                         std::string correo);
+                         std::string correo, std::string tipoVivienda);
   void listarAdoptantes() const;
   Adoptante *buscarAdoptantePorId(int id);
   const Adoptante *buscarAdoptantePorId(int id) const;
