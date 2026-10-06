@@ -104,7 +104,9 @@ bool contieneSoloLetrasYEspacios(const string &valor) {
 	return contieneLetra;
 }
 
-string leerTextoSoloLetras(const string &mensaje) {
+template <typename Validador>
+string leerTextoValidado(const string &mensaje, Validador esValido,
+						 const string &mensajeError) {
 	string valor;
 	while (true) {
 		cout << mensaje;
@@ -112,16 +114,68 @@ string leerTextoSoloLetras(const string &mensaje) {
 			if (cin.eof()) {
 				throw FinDeEntrada();
 			}
-			cout << "Entrada invalida. Debe ingresar solo letras y espacios.\n";
+			cout << mensajeError << "\n";
 			limpiarEntrada();
 			continue;
 		}
 
-		if (contieneSoloLetrasYEspacios(valor)) {
+		if (esValido(valor)) {
 			return valor;
 		}
-		cout << "Entrada invalida. Debe ingresar solo letras y espacios.\n";
+		cout << mensajeError << "\n";
 	}
+}
+
+string leerTextoSoloLetras(const string &mensaje) {
+	return leerTextoValidado(
+		mensaje, contieneSoloLetrasYEspacios,
+		"Entrada invalida. Debe ingresar solo letras y espacios.");
+}
+
+bool contieneSoloDigitos(const string &valor) {
+	if (valor.empty()) {
+		return false;
+	}
+	for (unsigned char caracter : valor) {
+		if (caracter < '0' || caracter > '9') {
+			return false;
+		}
+	}
+	return true;
+}
+
+string leerTelefono(const string &mensaje) {
+	return leerTextoValidado(
+		mensaje, contieneSoloDigitos,
+		"Entrada invalida. El telefono debe contener solo numeros.");
+}
+
+bool esCorreoValido(const string &valor) {
+	size_t posicionArroba = valor.find('@');
+	if (posicionArroba == string::npos || posicionArroba == 0 ||
+		posicionArroba == valor.size() - 1 ||
+		valor.find('@', posicionArroba + 1) != string::npos) {
+		return false;
+	}
+
+	size_t posicionPunto = valor.find('.', posicionArroba + 1);
+	if (posicionPunto == string::npos || posicionPunto == valor.size() - 1) {
+		return false;
+	}
+
+	for (unsigned char caracter : valor) {
+		if (!isalnum(caracter) && caracter != '@' && caracter != '.' &&
+			caracter != '_' && caracter != '-') {
+			return false;
+		}
+	}
+	return true;
+}
+
+string leerCorreo(const string &mensaje) {
+	return leerTextoValidado(
+		mensaje, esCorreoValido,
+		"Entrada invalida. Use letras, numeros y solo estos simbolos: @ . _ -.");
 }
 
 bool leerSiNo(const string &mensaje) {
@@ -190,8 +244,8 @@ void buscarAnimal(const Refugio &refugio) {
 
 void registrarAdoptante(Refugio &refugio) {
 	string nombre = leerTextoSoloLetras("Nombre: ");
-	string telefono = leerTexto("Telefono: ");
-	string correo = leerTexto("Correo: ");
+	string telefono = leerTelefono("Telefono: ");
+	string correo = leerCorreo("Correo: ");
 	string tipoVivienda =
 		leerTextoSoloLetras("Tipo de vivienda (casa, departamento, etc.): ");
 	refugio.registrarAdoptante(nombre, telefono, correo, tipoVivienda);
