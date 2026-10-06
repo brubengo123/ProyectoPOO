@@ -1,6 +1,7 @@
 #include "Refugio.h"
 #include "Coleccion.h"
 #include "Excepciones.h"
+#include <cctype>
 #include <iostream>
 #include <limits>
 #include <string>
@@ -68,6 +69,61 @@ string leerTexto(const string &mensaje) {
 	}
 }
 
+bool contieneSoloLetrasYEspacios(const string &valor) {
+	static const string letrasAcentuadas[] = {
+		"á", "é", "í", "ó", "ú", "ü", "ñ",
+		"Á", "É", "Í", "Ó", "Ú", "Ü", "Ñ"};
+	bool contieneLetra = false;
+
+	for (size_t posicion = 0; posicion < valor.size();) {
+		unsigned char caracter = valor[posicion];
+		if (isalpha(caracter)) {
+			contieneLetra = true;
+			++posicion;
+			continue;
+		}
+		if (caracter == ' ') {
+			++posicion;
+			continue;
+		}
+
+		bool esLetraAcentuada = false;
+		for (const string &letra : letrasAcentuadas) {
+			if (valor.compare(posicion, letra.size(), letra) == 0) {
+				posicion += letra.size();
+				contieneLetra = true;
+				esLetraAcentuada = true;
+				break;
+			}
+		}
+		if (!esLetraAcentuada) {
+			return false;
+		}
+	}
+
+	return contieneLetra;
+}
+
+string leerTextoSoloLetras(const string &mensaje) {
+	string valor;
+	while (true) {
+		cout << mensaje;
+		if (!getline(cin, valor)) {
+			if (cin.eof()) {
+				throw FinDeEntrada();
+			}
+			cout << "Entrada invalida. Debe ingresar solo letras y espacios.\n";
+			limpiarEntrada();
+			continue;
+		}
+
+		if (contieneSoloLetrasYEspacios(valor)) {
+			return valor;
+		}
+		cout << "Entrada invalida. Debe ingresar solo letras y espacios.\n";
+	}
+}
+
 bool leerSiNo(const string &mensaje) {
 	char respuesta;
 	while (true) {
@@ -107,16 +163,16 @@ void mostrarMenu() {
 void registrarPerro(Refugio &refugio) {
 	string nombre = leerTexto("Nombre: ");
 	int edad = leerEntero("Edad: ");
-	string salud = leerTexto("Estado de salud: ");
-	string raza = leerTexto("Raza: ");
-	string tamano = leerTexto("Tamano: ");
+	string salud = leerTextoSoloLetras("Estado de salud: ");
+	string raza = leerTextoSoloLetras("Raza: ");
+	string tamano = leerTextoSoloLetras("Tamano: ");
 	refugio.registrarPerro(nombre, edad, salud, raza, tamano);
 }
 
 void registrarGato(Refugio &refugio) {
 	string nombre = leerTexto("Nombre: ");
 	int edad = leerEntero("Edad: ");
-	string salud = leerTexto("Estado de salud: ");
+	string salud = leerTextoSoloLetras("Estado de salud: ");
 	string colorPelaje = leerTexto("Color del pelaje: ");
 	bool esDeInterior = leerSiNo("¿Es de interior? (s = adentro, n = afuera)");
 	refugio.registrarGato(nombre, edad, salud, colorPelaje, esDeInterior);
@@ -133,11 +189,11 @@ void buscarAnimal(const Refugio &refugio) {
 }
 
 void registrarAdoptante(Refugio &refugio) {
-	string nombre = leerTexto("Nombre: ");
+	string nombre = leerTextoSoloLetras("Nombre: ");
 	string telefono = leerTexto("Telefono: ");
 	string correo = leerTexto("Correo: ");
 	string tipoVivienda =
-		leerTexto("Tipo de vivienda (casa, departamento, etc.): ");
+		leerTextoSoloLetras("Tipo de vivienda (casa, departamento, etc.): ");
 	refugio.registrarAdoptante(nombre, telefono, correo, tipoVivienda);
 }
 
