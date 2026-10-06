@@ -26,8 +26,6 @@ public:
   // Los punteros devueltos son prestados; Refugio conserva su propiedad.
   Animal *buscarAnimalPorId(int id);
   const Animal *buscarAnimalPorId(int id) const;
-  Animal *operator[](size_t posicion);
-  const Animal *operator[](size_t posicion) const;
   Animal *operator()(int id);
   const Animal *operator()(int id) const;
 

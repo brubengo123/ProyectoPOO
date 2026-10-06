@@ -221,20 +221,6 @@ const Animal *Refugio::buscarAnimalPorId(int id) const {
   return nullptr;
 }
 
-Animal *Refugio::operator[](size_t posicion) {
-  if (posicion >= animales.size()) {
-    throw IndiceInvalidoException(posicion);
-  }
-  return animales[posicion];
-}
-
-const Animal *Refugio::operator[](size_t posicion) const {
-  if (posicion >= animales.size()) {
-    throw IndiceInvalidoException(posicion);
-  }
-  return animales[posicion];
-}
-
 Animal *Refugio::operator()(int id) { return buscarAnimalPorId(id); }
 
 const Animal *Refugio::operator()(int id) const {

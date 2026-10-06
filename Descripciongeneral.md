@@ -55,6 +55,7 @@ Ingresar:
 - Nombre: Ana
 - Telefono: 1122334455
 - Correo: ana@gmail.com
+- Tipo de vivienda: casa
 
 Resultado esperado:
 - Se registra el adoptante con un ID.
@@ -100,5 +101,4 @@ Elegir la opción:
 - 0: Salir del sistema
 
 ---
-
 

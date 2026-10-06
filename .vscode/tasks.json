@@ -11,7 +11,7 @@
                 "${workspaceFolder}\\refugio.cpp",
                 "${workspaceFolder}\\main.cpp",
                 "-o",
-                "${workspaceFolder}\\programa.exe"
+                "${workspaceFolder}\\Sistemaderefugio.exe"
             ],
             "options": {
                 "cwd": "${fileDirname}"
